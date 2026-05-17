@@ -1,0 +1,16 @@
+{
+  "name": "send-to-logseq",
+  "version": "0.1.0",
+  "description": "Firefox extension that sends the current page to Logseq.",
+  "license": "GPL-3.0-or-later",
+  "private": true,
+  "scripts": {
+    "lint": "web-ext lint --self-hosted",
+    "build": "web-ext build --overwrite-dest --artifacts-dir dist --filename send-to-logseq-{version}.xpi",
+    "icons": "for s in 16 32 48 64 96 128; do rsvg-convert -w $s -h $s icons/icon.svg -o icons/icon-${s}.png; done",
+    "run": "web-ext run"
+  },
+  "devDependencies": {
+    "web-ext": "^10.0.0"
+  }
+}

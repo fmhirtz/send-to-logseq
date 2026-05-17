@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Send to Logseq</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1a1a1a;
+      --muted: #6b6b6b;
+      --border: #e5e5e5;
+      --accent: #2c3e50;
+      --accent-fg: #ffffff;
+      --ok: #1e8449;
+      --err: #b03a2e;
+      --hover: #f5f5f5;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1f1f1f;
+        --fg: #ececec;
+        --muted: #9a9a9a;
+        --border: #3a3a3a;
+        --accent: #5dade2;
+        --accent-fg: #0b1a26;
+        --ok: #58d68d;
+        --err: #ec7063;
+        --hover: #2a2a2a;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 14px;
+      width: 340px;
+      font: 13px/1.4 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+    }
+    .title {
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 2px;
+      word-break: break-word;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .url {
+      color: var(--muted);
+      font-size: 11px;
+      word-break: break-all;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    button {
+      font: inherit;
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--fg);
+      cursor: pointer;
+      text-align: left;
+    }
+    button:hover:not(:disabled) { background: var(--hover); }
+    button:disabled { opacity: 0.6; cursor: default; }
+    button.primary {
+      background: var(--accent);
+      color: var(--accent-fg);
+      border-color: var(--accent);
+      font-weight: 500;
+    }
+    button.primary:hover:not(:disabled) { filter: brightness(1.1); background: var(--accent); }
+    details {
+      margin-top: 8px;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+    }
+    summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 12px;
+      user-select: none;
+      list-style: none;
+      padding: 2px 0;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▸ "; display: inline-block; transition: transform 0.15s; }
+    details[open] summary::before { transform: rotate(90deg); }
+    textarea {
+      width: 100%;
+      margin: 8px 0;
+      padding: 6px 8px;
+      min-height: 56px;
+      font: inherit;
+      font-size: 12px;
+      color: var(--fg);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      resize: vertical;
+    }
+    textarea:focus, button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+    .status {
+      margin-top: 10px;
+      min-height: 1.2em;
+      font-size: 12px;
+    }
+    .status.ok  { color: var(--ok); }
+    .status.err { color: var(--err); }
+    .config-link {
+      display: inline-block;
+      margin-top: 6px;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 12px;
+      background: none;
+      border: none;
+      padding: 0;
+      text-align: left;
+      width: auto;
+    }
+    .config-link:hover { text-decoration: underline; background: none; }
+    .needs-config {
+      padding: 10px;
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      text-align: center;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div id="ready">
+    <div class="title" id="page-title">—</div>
+    <div class="url" id="page-url">—</div>
+
+    <button id="send-link" class="primary">Append link to today's journal</button>
+
+    <details>
+      <summary>Create as a new page</summary>
+      <textarea id="note" placeholder="Optional note or excerpt…"></textarea>
+      <button id="create-page">Create page + link from journal</button>
+    </details>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <div id="unconfigured" class="hidden">
+    <div class="needs-config">
+      No Logseq token yet.<br>
+      <button class="config-link" id="open-options-empty">Open options to configure →</button>
+    </div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
