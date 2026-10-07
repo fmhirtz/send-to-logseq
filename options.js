@@ -21,8 +21,6 @@ async function save() {
   const token = $('token').value.trim();
   const dateFormatOverride = $('dateFormatOverride').value.trim();
 
-  // Light validation: warn if host doesn't look like a localhost URL.
-  // We don't hard-block; the user might have tunneled it.
   await browser.storage.local.set({ host, token, dateFormatOverride });
 
   let msg = 'Saved.';

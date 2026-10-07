@@ -14,6 +14,7 @@
       --ok: #1e8449;
       --err: #b03a2e;
       --hover: #f5f5f5;
+      --field-bg: #fafafa;
     }
     @media (prefers-color-scheme: dark) {
       :root {
@@ -26,6 +27,7 @@
         --ok: #58d68d;
         --err: #ec7063;
         --hover: #2a2a2a;
+        --field-bg: #262626;
       }
     }
     * { box-sizing: border-box; }
@@ -93,20 +95,44 @@
     summary::-webkit-details-marker { display: none; }
     summary::before { content: "▸ "; display: inline-block; transition: transform 0.15s; }
     details[open] summary::before { transform: rotate(90deg); }
+    label.field {
+      display: block;
+      margin: 8px 0 2px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 6px 8px;
+      font: inherit;
+      font-size: 12px;
+      color: var(--fg);
+      background: var(--field-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .suffix-preview {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+      min-height: 1em;
+      word-break: break-word;
+      font-style: italic;
+    }
     textarea {
       width: 100%;
-      margin: 8px 0;
+      margin: 4px 0 8px;
       padding: 6px 8px;
       min-height: 56px;
       font: inherit;
       font-size: 12px;
       color: var(--fg);
-      background: var(--bg);
+      background: var(--field-bg);
       border: 1px solid var(--border);
       border-radius: 6px;
       resize: vertical;
     }
-    textarea:focus, button:focus-visible {
+    textarea:focus, input:focus, button:focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 1px;
     }
@@ -149,7 +175,14 @@
 
     <details>
       <summary>Create as a new page</summary>
+
+      <label class="field" for="title-suffix">Append to title (optional)</label>
+      <input type="text" id="title-suffix" placeholder="e.g. - reading, (ref), 2026-Q4" autocomplete="off">
+      <div class="suffix-preview" id="suffix-preview"></div>
+
+      <label class="field" for="note">Note (optional)</label>
       <textarea id="note" placeholder="Optional note or excerpt…"></textarea>
+
       <button id="create-page">Create page + link from journal</button>
     </details>
 

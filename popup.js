@@ -2,14 +2,15 @@
 import {
   sendLinkToJournal,
   createPageAndLink,
-  getSettings
+  getSettings,
+  sanitizePageName
 } from './lib/logseq.js';
 
 const $ = (id) => document.getElementById(id);
 
 async function init() {
-  // Hide the main UI and show the "configure first" prompt if there's no token.
-  const { token } = await getSettings();
+  const { token, lastTitleSuffix } = await getSettings();
+
   if (!token) {
     $('ready').classList.add('hidden');
     $('unconfigured').classList.remove('hidden');
@@ -25,6 +26,23 @@ async function init() {
   const url = tab.url || '';
   $('page-title').textContent = title;
   $('page-url').textContent = url;
+
+  // Restore last-used suffix so a session of same-themed captures doesn't
+  // require retyping. Cleared with one keystroke if not wanted.
+  const suffixInput = $('title-suffix');
+  suffixInput.value = lastTitleSuffix;
+
+  const preview = $('suffix-preview');
+  const updatePreview = () => {
+    const suffix = suffixInput.value.trim();
+    if (!suffix) {
+      preview.textContent = '';
+      return;
+    }
+    const combined = sanitizePageName(`${title} ${suffix}`);
+    preview.textContent = `Page: ${combined}`;
+  };
+  suffixInput.addEventListener('input', updatePreview);
 
   const status = $('status');
   const setStatus = (text, kind) => {
@@ -56,9 +74,15 @@ async function init() {
     run('Sending', () => sendLinkToJournal(title, url));
   });
 
-  $('create-page').addEventListener('click', () => {
+  $('create-page').addEventListener('click', async () => {
     const note = $('note').value;
-    run('Creating page', () => createPageAndLink(title, url, note));
+    const suffix = suffixInput.value.trim();
+
+    // Remember the suffix for next time (empty string also persists, which
+    // is correct — clearing means "I don't want this anymore").
+    await browser.storage.local.set({ lastTitleSuffix: suffix });
+
+    run('Creating page', () => createPageAndLink(title, url, note, suffix));
   });
 }
 

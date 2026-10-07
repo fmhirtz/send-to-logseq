@@ -1,6 +1,6 @@
 {
   "name": "send-to-logseq",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Firefox extension that sends the current page to Logseq.",
   "license": "GPL-3.0-or-later",
   "private": true,
